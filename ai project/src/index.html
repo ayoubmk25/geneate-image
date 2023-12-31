@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Image Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+</head>
+<body>
+    <h1>AI Image Generator</h1>
+    <form id="imageForm">
+        <label for="inputData">Enter Input:</label>
+        <input type="text" id="inputData" name="inputData">
+        <button type="submit">Generate Image</button>
+    </form>
+    <div id="outputImage">
+        <!-- Generated image will be displayed here -->
+    </div>
+    
+    <script>
+        async function generateImage(event) {
+            event.preventDefault();
+            const inputData = document.getElementById('inputData').value;
+
+    
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: inputData })
+            });
+
+            const result = await response.json();
+            const outputImage = document.getElementById('outputImage');
+            outputImage.innerHTML = `<img src="data:image/png;base64,${result.image}" alt="Generated Image">`;
+        }
+
+        document.getElementById('imageForm').addEventListener('submit', generateImage);
+    </script>
+</body>
+</html>
